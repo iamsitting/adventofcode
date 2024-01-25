@@ -1,4 +1,3 @@
-
 using System.Drawing;
 
 namespace AOC.Day3;
@@ -6,17 +5,22 @@ namespace AOC.Day3;
 public static class Day3Part1
 {
     public record Pos(int X, int Y);
-    private const string FileName = "day3.txt";
+
+    private const string FileName = "../inputs/day3.txt";
+
     private static string ReadFile()
     {
         return File.ReadAllText(FileName);
-
     }
+
     private static bool IsSymbol(char ch)
     {
-        if (ch == '.') return false;
-        else return ch < '0' || ch > '9';
+        if (ch == '.')
+            return false;
+        else
+            return ch < '0' || ch > '9';
     }
+
     private static int Solve(string input)
     {
         var lines = input.Split('\n');
@@ -41,21 +45,27 @@ public static class Day3Part1
                     if (startPos == null) // current char is beginning of a new number
                     {
                         startPos = new Pos(i, j);
-                        if (i > 0 && IsSymbol(lines[j][i - 1])) shouldAdd = true; // left
+                        if (i > 0 && IsSymbol(lines[j][i - 1]))
+                            shouldAdd = true; // left
                     }
 
                     endPos = new Pos(i, j); // update end position
 
                     if (!shouldAdd) // if has not been added, check if it should
                     {
-                        if (j > 0 && IsSymbol(lines[j - 1][i])) shouldAdd = true; // top
-                        else if (j < y - 1 && IsSymbol(lines[j + 1][i])) shouldAdd = true; // bottom
-                        else if (i > 0 && j > 0 && IsSymbol(lines[j - 1][i - 1])) shouldAdd = true; // top-left
-                        else if (i > 0 && j < y - 1 && IsSymbol(lines[j + 1][i - 1])) shouldAdd = true; // bottom-left
-                        else if (i < x - 1 && j > 0 && IsSymbol(lines[j - 1][i + 1])) shouldAdd = true; // top-right
-                        else if (i < x - 1 && j < y - 1 && IsSymbol(lines[j + 1][i + 1])) shouldAdd = true; // bottom-right
+                        if (j > 0 && IsSymbol(lines[j - 1][i]))
+                            shouldAdd = true; // top
+                        else if (j < y - 1 && IsSymbol(lines[j + 1][i]))
+                            shouldAdd = true; // bottom
+                        else if (i > 0 && j > 0 && IsSymbol(lines[j - 1][i - 1]))
+                            shouldAdd = true; // top-left
+                        else if (i > 0 && j < y - 1 && IsSymbol(lines[j + 1][i - 1]))
+                            shouldAdd = true; // bottom-left
+                        else if (i < x - 1 && j > 0 && IsSymbol(lines[j - 1][i + 1]))
+                            shouldAdd = true; // top-right
+                        else if (i < x - 1 && j < y - 1 && IsSymbol(lines[j + 1][i + 1]))
+                            shouldAdd = true; // bottom-right
                     }
-
 
                     if (i == x - 1) // if at the end of the line
                     {
@@ -69,13 +79,12 @@ public static class Day3Part1
                         startPos = null;
                         endPos = null;
                     }
-
                 }
                 else if (startPos != null) // a number has been started, and now the number has ended
                 {
-
                     // if not added, check if end char is a symbol
-                    if (!shouldAdd && IsSymbol(lines[j][i])) shouldAdd = true;
+                    if (!shouldAdd && IsSymbol(lines[j][i]))
+                        shouldAdd = true;
 
                     var numStr = lines[startPos.Y][startPos.X..(endPos!.X + 1)];
                     if (shouldAdd)
@@ -95,7 +104,7 @@ public static class Day3Part1
     public static void Test()
     {
         var input =
-@"467..114..
+            @"467..114..
 ...*......
 ..35..633.
 ......#...
@@ -127,15 +136,15 @@ public static class Day3Part1
 
 public static class Day3Part2
 {
+    private const string FileName = "../inputs/day3.txt";
 
-    private const string FileName = "day3.txt";
     private static string ReadFile()
     {
         return File.ReadAllText(FileName);
-
     }
+
     private static bool IsDigit(char ch) => ch >= '0' && ch <= '9';
-    
+
     private static int Solve(string input)
     {
         var lines = input.Split('\n');
@@ -148,13 +157,16 @@ public static class Day3Part2
                 var ch = lines[i][j];
                 int[] gearRatios = [];
                 char[] gearRatio = [];
-                if (ch != '*') continue;
+                if (ch != '*')
+                    continue;
 
                 // to the left
                 for (var k = j - 1; k >= 0; k--)
                 {
-                    if (IsDigit(lines[i][k])) gearRatio = [lines[i][k], .. gearRatio];
-                    else break;
+                    if (IsDigit(lines[i][k]))
+                        gearRatio = [lines[i][k], .. gearRatio];
+                    else
+                        break;
                 }
                 if (gearRatio.Length > 0)
                 {
@@ -166,8 +178,10 @@ public static class Day3Part2
                 // to the right
                 for (var k = j + 1; k < lines[i].Length; k++)
                 {
-                    if (IsDigit(lines[i][k])) gearRatio = [.. gearRatio, lines[i][k]];
-                    else break;
+                    if (IsDigit(lines[i][k]))
+                        gearRatio = [.. gearRatio, lines[i][k]];
+                    else
+                        break;
                 }
                 if (gearRatio.Length > 0)
                 {
@@ -183,14 +197,18 @@ public static class Day3Part2
                     gearRatio = [lines[up][j]];
                     for (var k = j - 1; k >= 0; k--) // go to the left
                     {
-                        if (IsDigit(lines[up][k])) gearRatio = [lines[up][k], .. gearRatio];
-                        else break;
+                        if (IsDigit(lines[up][k]))
+                            gearRatio = [lines[up][k], .. gearRatio];
+                        else
+                            break;
                     }
                     // go to the right
                     for (var k = j + 1; k < lines[up].Length; k++)
                     {
-                        if (IsDigit(lines[up][k])) gearRatio = [.. gearRatio, lines[up][k]];
-                        else break;
+                        if (IsDigit(lines[up][k]))
+                            gearRatio = [.. gearRatio, lines[up][k]];
+                        else
+                            break;
                     }
                     if (gearRatio.Length > 0)
                     {
@@ -203,8 +221,10 @@ public static class Day3Part2
                 {
                     for (var k = j - 1; k >= 0; k--) // go to the left
                     {
-                        if (IsDigit(lines[up][k])) gearRatio = [lines[up][k], .. gearRatio];
-                        else break;
+                        if (IsDigit(lines[up][k]))
+                            gearRatio = [lines[up][k], .. gearRatio];
+                        else
+                            break;
                     }
                     if (gearRatio.Length > 0)
                     {
@@ -215,8 +235,10 @@ public static class Day3Part2
                     // go to the right
                     for (var k = j + 1; k < lines[up].Length; k++)
                     {
-                        if (IsDigit(lines[up][k])) gearRatio = [.. gearRatio, lines[up][k]];
-                        else break;
+                        if (IsDigit(lines[up][k]))
+                            gearRatio = [.. gearRatio, lines[up][k]];
+                        else
+                            break;
                     }
                     if (gearRatio.Length > 0)
                     {
@@ -233,14 +255,18 @@ public static class Day3Part2
                     gearRatio = [lines[down][j]];
                     for (var k = j - 1; k >= 0; k--) // go to the left
                     {
-                        if (IsDigit(lines[down][k])) gearRatio = [lines[down][k], .. gearRatio];
-                        else break;
+                        if (IsDigit(lines[down][k]))
+                            gearRatio = [lines[down][k], .. gearRatio];
+                        else
+                            break;
                     }
                     // go to the right
                     for (var k = j + 1; k < lines[down].Length; k++)
                     {
-                        if (IsDigit(lines[down][k])) gearRatio = [.. gearRatio, lines[down][k]];
-                        else break;
+                        if (IsDigit(lines[down][k]))
+                            gearRatio = [.. gearRatio, lines[down][k]];
+                        else
+                            break;
                     }
                     if (gearRatio.Length > 0)
                     {
@@ -253,8 +279,10 @@ public static class Day3Part2
                 {
                     for (var k = j - 1; k > 0; k--) // go to the left
                     {
-                        if (IsDigit(lines[down][k])) gearRatio = [lines[down][k], .. gearRatio];
-                        else break;
+                        if (IsDigit(lines[down][k]))
+                            gearRatio = [lines[down][k], .. gearRatio];
+                        else
+                            break;
                     }
                     if (gearRatio.Length > 0)
                     {
@@ -265,8 +293,10 @@ public static class Day3Part2
                     // go to the right
                     for (var k = j + 1; k < lines[down].Length; k++)
                     {
-                        if (IsDigit(lines[down][k])) gearRatio = [.. gearRatio, lines[down][k]];
-                        else break;
+                        if (IsDigit(lines[down][k]))
+                            gearRatio = [.. gearRatio, lines[down][k]];
+                        else
+                            break;
                     }
                     if (gearRatio.Length > 0)
                     {
@@ -276,22 +306,21 @@ public static class Day3Part2
                     }
                 }
 
-                if(gearRatios.Length == 2)
+                if (gearRatios.Length == 2)
                 {
                     products = [..products, gearRatios.Aggregate((a, x) => a * x)];
                     gearRatios = [];
                 }
-
             }
         }
 
         return products.Sum();
-
     }
+
     public static void Test()
     {
         var input =
-@"467..114..
+            @"467..114..
 ...*......
 ..35..633.
 ......#...
@@ -320,3 +349,4 @@ public static class Day3Part2
         Console.WriteLine(answer);
     }
 }
+
